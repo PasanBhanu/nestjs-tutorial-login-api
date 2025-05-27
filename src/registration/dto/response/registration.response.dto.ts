@@ -1,9 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { CommonResponse } from '../../../shared/dto/common-response.dto';
 
-export class LoginResponse extends CommonResponse {
+export class RegistrationResponse extends CommonResponse {
   @ApiProperty()
-  userId: string | null;
-  @ApiProperty()
-  registrationComplete: boolean;
+  userId: string;
 }

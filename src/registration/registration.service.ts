@@ -59,7 +59,9 @@ export class RegistrationService {
           hash: hash,
         });
 
-        return new RegistrationResponse();
+        const response = new RegistrationResponse();
+        response.userId = user._id.toString();
+        return response;
       } else {
         const deviceExists = await this.userModel
           .exists({
@@ -125,7 +127,9 @@ export class RegistrationService {
           await this.phoneAuthenticationModel.updateOne({ phoneNumber: request.mobileNumber }, { $set: { userId: optUserByEmail } });
         }
 
-        return new RegistrationResponse();
+        const response = new RegistrationResponse();
+        response.userId = optUserByEmail._id.toString();
+        return response;
       }
     } else {
       // Break Registration - Data Issue

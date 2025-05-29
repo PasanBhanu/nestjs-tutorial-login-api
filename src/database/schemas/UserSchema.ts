@@ -1,16 +1,23 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
 
-@Schema({ _id: false, timestamps: true })
+@Schema({
+  _id: false,
+  timestamps: true,
+})
 export class FirebaseLink {
   @Prop()
   id: string;
   @Prop()
   provider: string;
 }
+
 export const FirebaseLinkSchema = SchemaFactory.createForClass(FirebaseLink);
 
-@Schema({ _id: false, timestamps: true })
+@Schema({
+  _id: false,
+  timestamps: true,
+})
 export class Device {
   @Prop()
   deviceId: string;
@@ -19,6 +26,7 @@ export class Device {
   @Prop()
   fcmToken: string;
 }
+
 export const DeviceSchema = SchemaFactory.createForClass(Device);
 
 @Schema({ timestamps: true })
@@ -40,6 +48,7 @@ export class User {
   @Prop([DeviceSchema])
   devices: Device[];
 }
+
 export const UserSchema = SchemaFactory.createForClass(User);
 
 export type UserDocumentOverride = {
@@ -47,3 +56,7 @@ export type UserDocumentOverride = {
   devices: Types.DocumentArray<Device>;
 };
 export type UserDocument = HydratedDocument<User, UserDocumentOverride>;
+
+UserSchema.index({ email: 1 }, { unique: true });
+UserSchema.index({ mobileNumber: 1 }, { unique: true });
+UserSchema.index({ 'firebaseLinks.id': 1 }, { unique: true, sparse: true });

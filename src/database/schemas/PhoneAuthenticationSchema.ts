@@ -9,10 +9,8 @@ export class PhoneAuthentication {
     ref: 'User',
   })
   userId: User;
-
   @Prop()
   phoneNumber: string;
-
   @Prop()
   hash: string;
 }

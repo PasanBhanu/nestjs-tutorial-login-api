@@ -13,6 +13,7 @@ async function bootstrap() {
     .setDescription('Login System API Description')
     .setVersion('1.0')
     .addTag('login')
+    .addBearerAuth()
     .build();
 
   const documentFactory = () => SwaggerModule.createDocument(app, config);

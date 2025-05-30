@@ -15,19 +15,9 @@ const logger = new Logger('App Module');
     ConfigModule.forRoot(),
     MongooseModule.forRoot(<string>process.env.MONGODB_SRN, {
       onConnectionCreate: (connection: Connection) => {
-        connection.on('connected', () =>
-          logger.log(`Database ${connection.id} Connected: ${connection.host}`),
-        );
-        connection.on('disconnected', () =>
-          logger.log(
-            `Database ${connection.id} Disconnected: ${connection.host}`,
-          ),
-        );
-        connection.on('reconnected', () =>
-          logger.log(
-            `Database ${connection.id} Reconnected: ${connection.host}`,
-          ),
-        );
+        connection.on('connected', () => logger.log(`Database ${connection.id} Connected: ${connection.host}`));
+        connection.on('disconnected', () => logger.log(`Database ${connection.id} Disconnected: ${connection.host}`));
+        connection.on('reconnected', () => logger.log(`Database ${connection.id} Reconnected: ${connection.host}`));
 
         return connection;
       },

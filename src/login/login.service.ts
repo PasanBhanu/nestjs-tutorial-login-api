@@ -197,14 +197,18 @@ export class LoginService {
     attempts = attempts + 1;
     await this.otpSessionModel.findByIdAndUpdate(otpSession._id, {
       attempts: attempts,
-      status: 90,
+      status: 1,
     });
 
-    const otpHash = await bcrypt.hash(request.otpValue, 10);
+    const otpMatch = await bcrypt.compare(request.otpValue, otpSession.otp);
 
-    if (otpSession.otp !== otpHash) {
+    if (!otpMatch) {
       throw new UnauthorizedException();
     }
+
+    await this.otpSessionModel.findByIdAndUpdate(otpSession._id, {
+      status: 90,
+    });
 
     const hash = await bcrypt.hash(otpSession.phoneNumber, 10);
 

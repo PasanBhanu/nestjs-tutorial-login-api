@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../database/schemas/UserSchema';
 import { Model } from 'mongoose';
@@ -15,6 +15,8 @@ import { OtpSession } from '../database/schemas/OtpSession';
 
 @Injectable()
 export class LoginService {
+  private readonly logger = new Logger(LoginService.name);
+
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
     @InjectModel(OtpSession.name) private otpSessionModel: Model<OtpSession>,
@@ -84,6 +86,8 @@ export class LoginService {
     const otpValue: number = randomInt(100000, 1000000);
     const otpHash = await bcrypt.hash(otpValue.toString(), 10);
 
+    this.logger.log(`OTP: ${otpValue}`);
+
     // Save to DB
     const otpSession = await this.otpSessionModel.create({
       otp: otpHash,
@@ -139,6 +143,8 @@ export class LoginService {
     // Generate OTP
     const otpValue: number = randomInt(100000, 1000000);
     const otpHash = await bcrypt.hash(otpValue.toString(), 10);
+
+    this.logger.log(`OTP: ${otpValue}`);
 
     // Generate Token
     const payload = {

@@ -6,6 +6,8 @@ import { RegistrationRequest } from './dto/request/registration.request.dto';
 import { RegistrationResponse } from './dto/response/registration.response.dto';
 import * as bcrypt from 'bcrypt';
 import { PhoneAuthentication } from '../database/schemas/PhoneAuthenticationSchema';
+import { CheckuserRequest } from './dto/request/checkuser.request.dto';
+import { CheckuserResponse } from './dto/response/checkuser.response.dto';
 
 @Injectable()
 export class RegistrationService {
@@ -135,5 +137,29 @@ export class RegistrationService {
       // Break Registration - Data Issue
       throw new Error('User registration step mismatch.');
     }
+  }
+
+  async checkUser(request: CheckuserRequest): Promise<CheckuserResponse> {
+    const response = new CheckuserResponse();
+
+    if (request.provider === 'phone') {
+      const optUserByMobile = await this.userModel.exists({ mobileNumber: request.value }).exec();
+
+      if (optUserByMobile === null) {
+        response.registrationComplete = false;
+      } else {
+        response.registrationComplete = true;
+      }
+    } else {
+      const optUserByEmail = await this.userModel.exists({ email: request.value }).exec();
+
+      if (optUserByEmail === null) {
+        response.registrationComplete = false;
+      } else {
+        response.registrationComplete = true;
+      }
+    }
+
+    return response;
   }
 }

@@ -4,8 +4,8 @@ export class UserDetailsResponse extends CommonResponse {
   id: string;
   name: string;
   email: string;
-  mobileNo: string;
-  profilePicture: string;
+  mobileNumber: string;
+  imageUrl: string;
   status: number;
   hasPassword: boolean;
 }

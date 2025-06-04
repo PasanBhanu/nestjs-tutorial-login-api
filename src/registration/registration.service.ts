@@ -145,19 +145,11 @@ export class RegistrationService {
     if (request.provider === 'phone') {
       const optUserByMobile = await this.userModel.exists({ mobileNumber: request.value }).exec();
 
-      if (optUserByMobile === null) {
-        response.registrationComplete = false;
-      } else {
-        response.registrationComplete = true;
-      }
+      response.registrationComplete = optUserByMobile !== null;
     } else {
       const optUserByEmail = await this.userModel.exists({ email: request.value }).exec();
 
-      if (optUserByEmail === null) {
-        response.registrationComplete = false;
-      } else {
-        response.registrationComplete = true;
-      }
+      response.registrationComplete = optUserByEmail !== null;
     }
 
     return response;

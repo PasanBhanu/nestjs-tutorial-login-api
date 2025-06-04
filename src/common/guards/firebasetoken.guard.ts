@@ -1,11 +1,9 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
+import * as admin from 'firebase-admin';
 
 @Injectable()
-export class OtpTokenGuard implements CanActivate {
-  constructor(private jwtService: JwtService) {}
-
+export class FirebaseTokenGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
@@ -14,7 +12,7 @@ export class OtpTokenGuard implements CanActivate {
     }
 
     try {
-      const payload = await this.jwtService.verifyAsync(token);
+      const payload = await admin.auth().verifyIdToken(token);
       request['tokenContext'] = payload;
     } catch {
       throw new UnauthorizedException();

@@ -12,6 +12,7 @@ import { JwtService } from '@nestjs/jwt';
 import { randomInt } from 'crypto';
 import * as bcrypt from 'bcrypt';
 import { OtpSession } from '../database/schemas/OtpSession';
+import { getAuth } from 'firebase-admin/auth';
 
 @Injectable()
 export class LoginService {
@@ -210,7 +211,7 @@ export class LoginService {
       status: 90,
     });
 
-    const hash = await bcrypt.hash(otpSession.phoneNumber, 10);
+    const hash = await getAuth().createCustomToken(otpSession.phoneNumber);
 
     // Response
     const response = new ValidateOtpResponse();

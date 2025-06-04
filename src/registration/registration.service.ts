@@ -143,13 +143,28 @@ export class RegistrationService {
     const response = new CheckuserResponse();
 
     if (request.provider === 'phone') {
-      const optUserByMobile = await this.userModel.exists({ mobileNumber: request.value }).exec();
-
-      response.registrationComplete = optUserByMobile !== null;
+      const optUserByMobile = await this.userModel.findOne({ mobileNumber: request.value }).exec();
+      if (!optUserByMobile) {
+        response.registrationComplete = false;
+      } else {
+        response.registrationComplete = true;
+        response.name = optUserByMobile.name;
+        response.email = optUserByMobile.email;
+        response.mobileNumber = optUserByMobile.mobileNumber;
+        response.profileUrl = optUserByMobile.imageUrl;
+      }
     } else {
-      const optUserByEmail = await this.userModel.exists({ email: request.value }).exec();
+      const optUserByEmail = await this.userModel.findOne({ email: request.value }).exec();
 
-      response.registrationComplete = optUserByEmail !== null;
+      if (!optUserByEmail) {
+        response.registrationComplete = false;
+      } else {
+        response.registrationComplete = true;
+        response.name = optUserByEmail.name;
+        response.email = optUserByEmail.email;
+        response.mobileNumber = optUserByEmail.mobileNumber;
+        response.profileUrl = optUserByEmail.imageUrl;
+      }
     }
 
     return response;

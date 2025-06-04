@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { ApiCreatedResponse } from '@nestjs/swagger';
 import { RegistrationRequest } from './dto/request/registration.request.dto';
 import { RegistrationResponse } from './dto/response/registration.response.dto';
@@ -24,6 +24,7 @@ export class RegistrationController {
     type: CheckuserResponse,
     description: 'success',
   })
+  @HttpCode(HttpStatus.OK)
   async checkUser(@Body() request: CheckuserRequest): Promise<CheckuserResponse> {
     return this.registrationService.checkUser(request);
   }
